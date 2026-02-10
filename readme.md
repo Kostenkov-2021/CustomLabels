@@ -28,6 +28,7 @@ The following control types can be labeled:
 * Sliders
 * Tabs
 * Menu items
+* Editable text
 
 ## Gestures
 
@@ -84,7 +85,28 @@ The panel displays all custom labels organized in a tree view by application. Yo
 
 Labels are stored in JSON files in NVDA's configuration directory under a `customLabels` folder. Each application has its own JSON file, making it easy to backup or share labels for specific applications.
 
+## Known Limitations
+
+* **Web-based applications in browse mode**: For applications built with web technologies (such as Outlook new, Slack, TeamViewer, and other Electron/WebView2 apps), custom labels only work in focus mode. Press NVDA+Space to switch to focus mode before using custom labels in these applications. This is due to how NVDA handles browse mode using a virtual buffer, which does not use the same live objects that custom labels rely on.
+* **Controls with identical properties**: If an application has multiple controls of the same type with the same name (or no name), some times custom labels cannot distinguish between them. Labeling one will label all matching controls. This is rare in practice, as most applications assign unique identifiers to their controls.
+
+## Contributors
+
+* [Leonardo Marenda (@LeonardoMarenda)](https://github.com/LeonardoMarenda): Added Italian translation. ([#1](https://github.com/kefaslungu/CustomLabels/pull/1))
+* [Kostenkov-2021 (@Kostenkov-2021)](https://github.com/Kostenkov-2021): Added Russian README and localization. ([#3](https://github.com/kefaslungu/CustomLabels/pull/3))
+* Umut KORKMAZ (umutkork@gmail.com): Added Turkish translation.
+* [George-br (@George-br)](https://github.com/George-br): Added Ukrainian translation. ([#6](https://github.com/kefaslungu/CustomLabels/pull/6))
+
 ## Changelog
+
+### Version 2026.1
+
+* Added Ukrainian, Russian and Turkish translations.
+* Improved control identification using original control name.
+* Fixed labels not working in web-based applications (Electron, WebView2).
+* Fixed all buttons getting the same label in some applications.
+* Added support for labeling Editable text.
+* Added known limitations documentation.
 
 ### Version 2026.0
 

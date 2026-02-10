@@ -33,6 +33,7 @@ addonHandler.initTranslation()
 LABELABLE_ROLES = {
 	controlTypes.Role.BUTTON,
 	controlTypes.Role.MENUBUTTON,
+	controlTypes.Role.EDITABLETEXT,
 	controlTypes.Role.TOGGLEBUTTON,
 	controlTypes.Role.CHECKBOX,
 	controlTypes.Role.RADIOBUTTON,

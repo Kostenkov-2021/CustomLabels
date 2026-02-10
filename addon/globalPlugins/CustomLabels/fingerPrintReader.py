@@ -12,7 +12,7 @@ from NVDAObjects.UIA import UIA
 def getObjectFingerprint(obj):
 	"""
 	Return a stable fingerprint for an NVDAObject.
-	SAFE version - no sibling iteration.
+	Uses backend-specific properties plus the original name for differentiation.
 	"""
 	try:
 		fp = {}
@@ -29,6 +29,17 @@ def getObjectFingerprint(obj):
 		except Exception:
 			fp["role"] = 0
 
+		# Original name - helps differentiate controls with different names
+		# (e.g., labeled buttons vs unlabeled ones in the same app)
+		# Use _get_name() to bypass any custom label overlay and get the real name
+		try:
+			if hasattr(obj, '_get_name'):
+				fp["name"] = obj._get_name() or ""
+			else:
+				fp["name"] = obj.name or ""
+		except Exception:
+			fp["name"] = ""
+
 		# Backend-specific ID
 		if isinstance(obj, UIA):
 			fp["backend"] = "UIA"
@@ -41,6 +52,9 @@ def getObjectFingerprint(obj):
 			except Exception:
 				fp["className"] = ""
 		else:
+			# IA2 - covers both native desktop apps and web content (IA2Web)
+			# windowClassName and windowControlID are always available
+			# name (set above) provides differentiation between controls
 			fp["backend"] = "IA2"
 			try:
 				fp["windowClassName"] = obj.windowClassName or ""

@@ -203,7 +203,7 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 			for fp, label in labels.items():
 				fpDict = dict(fp)
-				idStr = fpDict.get("automationId") or fpDict.get("windowClassName") or ""
+				idStr = fpDict.get("automationId") or fpDict.get("windowClassName") or fpDict.get("htmlId") or ""
 				labelText = _("{label} - {identifier}").format(label=label, identifier=idStr) if idStr else label
 				labelItem = self.labelsTree.AppendItem(appItem, labelText)
 				self._itemData[labelItem] = (appName, fp)
@@ -269,12 +269,12 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 		currentLabel = _labelStore.get(fp)
 		fpDict = dict(fp)
 
-		identifier = fpDict.get("automationId") or fpDict.get("windowClassName") or ""
+		identifier = fpDict.get("automationId") or fpDict.get("windowClassName") or fpDict.get("htmlId") or ""
 		roleValue = fpDict.get("role", 0)
 		roleName = getRoleDisplayString(roleValue)
 
 		controlInfo = {
-			'name': _("(not available from saved data)"),
+			'name': fpDict.get("name", _("(not available from saved data)")),
 			'role': roleName,
 			'app': fpDict.get("app", ""),
 			'identifier': identifier,
