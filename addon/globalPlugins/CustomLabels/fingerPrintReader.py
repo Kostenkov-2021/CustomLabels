@@ -40,6 +40,21 @@ def getObjectFingerprint(obj):
 		except Exception:
 			fp["name"] = ""
 
+		# Description - helps differentiate controls with the same name
+		# (e.g., multiple "Filter Options" buttons in Java apps like Ghidra)
+		try:
+			fp["description"] = obj.description or ""
+		except Exception:
+			fp["description"] = ""
+
+		# Parent name - helps differentiate controls in different
+		# toolbars/panels that otherwise have identical properties
+		try:
+			parent = obj.parent
+			fp["parentName"] = parent.name or "" if parent else ""
+		except Exception:
+			fp["parentName"] = ""
+
 		# Backend-specific ID
 		if isinstance(obj, UIA):
 			fp["backend"] = "UIA"

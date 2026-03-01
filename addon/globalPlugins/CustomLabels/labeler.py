@@ -117,10 +117,16 @@ class LabelStore:
 	def _keyFromString(self, s):
 		"""Convert JSON string back to fingerprint tuple."""
 		items = [tuple(item) for item in json.loads(s)]
-		# Migration: add 'name' field if missing (from pre-v2026.0.1 fingerprints)
+		# Migration: add fields missing from older fingerprint versions
 		keys = {item[0] for item in items}
 		if "name" not in keys:
 			items.append(("name", ""))
+		if "description" not in keys:
+			items.append(("description", ""))
+		if "parentName" not in keys:
+			items.append(("parentName", ""))
+		# Remove old parentDesc field if present
+		items = [item for item in items if item[0] != "parentDesc"]
 		return tuple(sorted(items))
 
 	def _getAppFromFingerprint(self, fingerprint):

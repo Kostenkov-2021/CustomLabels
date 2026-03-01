@@ -6,6 +6,7 @@
 
 import wx
 import api
+import config
 import controlTypes
 import globalPluginHandler
 import gui
@@ -27,6 +28,11 @@ import addonHandler
 
 # Initialize translations
 addonHandler.initTranslation()
+
+# Config spec for addon settings
+config.conf.spec["customLabels"] = {
+	"autoDescribe": "boolean(default=False)",
+}
 
 # Only these roles can be labeled
 # Subjected to change based on user feedback
@@ -71,20 +77,31 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		super().terminate()
 
 	def chooseNVDAObjectOverlayClasses(self, obj, clsList):
-		"""Inject overlay if custom label exists."""
+		"""Inject overlay if custom label exists, or auto-describe if enabled."""
 		try:
 			if obj.role not in LABELABLE_ROLES:
 				return
 
 			fp = getObjectFingerprint(obj)
-			if not fp:
-				return
+			if fp:
+				label = getLabel(fp)
+				if label:
+					clsList.insert(0, makeLabelOverlay(label))
+					return
 
-			label = getLabel(fp)
-			if not label:
-				return
-
-			clsList.insert(0, makeLabelOverlay(label))
+			# Auto-describe: if enabled and name is empty, use description
+			if config.conf["customLabels"]["autoDescribe"]:
+				try:
+					name = obj._get_name() if hasattr(obj, '_get_name') else obj.name
+				except Exception:
+					name = obj.name
+				if not name:
+					try:
+						desc = obj.description
+					except Exception:
+						desc = None
+					if desc:
+						clsList.insert(0, makeLabelOverlay(desc))
 
 		except Exception as e:
 			log.error(f"customlabels error: {e}")

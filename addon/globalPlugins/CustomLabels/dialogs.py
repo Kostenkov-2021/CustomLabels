@@ -6,6 +6,7 @@
 # See the file COPYING.txt for details.
 
 import wx
+import config
 import gui
 import gui.guiHelper
 import gui.settingsDialogs
@@ -178,6 +179,12 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 
 		self._updateButtonStates()
 
+		# Translators: Checkbox label for auto-describe feature
+		self.autoDescribeCheckbox = sHelper.addItem(
+			wx.CheckBox(self, label=_("&Speak description for unlabeled controls as labels if available"))
+		)
+		self.autoDescribeCheckbox.SetValue(config.conf["customLabels"]["autoDescribe"])
+
 	def _populateTree(self):
 		self.labelsTree.DeleteAllItems()
 		self._itemData.clear()
@@ -347,5 +354,4 @@ class CustomLabelsSettingsPanel(gui.settingsDialogs.SettingsPanel):
 			self._updateButtonStates()
 
 	def onSave(self):
-		# Labels are saved immediately on change, nothing to do here
-		pass
+		config.conf["customLabels"]["autoDescribe"] = self.autoDescribeCheckbox.GetValue()
